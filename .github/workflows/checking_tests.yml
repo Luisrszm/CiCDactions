@@ -4,11 +4,15 @@ on:
   pull_request:
     branches:
       - develop
+      - staging
 
 jobs:
   test:
-    name: Checking Tests
+    name: test (${{ matrix.node }})
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [18.x, 20.x, 22.x]
 
     steps:
       - name: Checkout code
@@ -17,7 +21,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 21.x
+          node-version: ${{ matrix.node }}
 
       - name: Install dependencies
         run: npm install
@@ -26,5 +30,5 @@ jobs:
         run: npm run build
 
       - name: Run cypress tests
-        run: npm run test
+        run: npm run test-component
 
